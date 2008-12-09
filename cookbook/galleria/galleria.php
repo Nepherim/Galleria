@@ -20,11 +20,11 @@ $HTMLHeaderFmt['galleria'] = '
 
 function galleria ($args) {
 	$o = Array(
-		'list'		 		=> '',			// use "ul.pmGalleryImageList" with pmGallery
+		'list'		 		=> '',			// use ".pmGalleryWrapper ul" with pmGallery
 		'image' 				=> '',			// leave this blank for and galleria will auto-create above the list. Use "#pmGallery_Image" with pmGallery
 		'history' 			=> 'false',
 		'clicknext' 		=> 'true',
-		'fadein' 			=> '600',		// 
+		'fadein' 			=> '600',		//
 		'width' 				=> '',			// 245
 		'height' 			=> '',			// 75
 		// carousel settings
@@ -37,7 +37,7 @@ function galleria ($args) {
 	$o = array_merge($o, $GLOBALS['galleria']);
 	$o = array_merge($o,ParseArgs($args));
 	$orient = ($o['vertical']=='true'?'vertical':'horizontal');
-	
+
 	return '
 <script type="text/javascript">
 //<![CDATA[
@@ -48,6 +48,7 @@ $(document).ready(function(){
 		insert    : "'. $o['image']. '", 										// the containing selector for our main image
 		onImage   : function(image,caption,thumb) { 							// lets add some image effects for demonstration purposes
 			image.css("display","none").fadeIn('. $o['fadein']. '); 		// fade in the image
+			caption.css("display","none").fadeIn('. $o['fadein']. '); 		// fade in the image
 			var _li = thumb.parents("li");										// fetch the thumbnail container
 			_li.siblings().children("img.selected").fadeTo(100,0.6);		// fade out inactive thumbnail
 			thumb.fadeTo("fast",1).addClass("selected");						// fade in active thumbnail
@@ -64,7 +65,7 @@ $(document).ready(function(){
 			thumb.hover(
 				function() { thumb.fadeTo("fast",1); },
 				function() { _li.not(".active").children("img").fadeTo("fast",0.6); } // don"t fade out if the parent is active
-			)
+			);
 		}
 	});'.
 	($o['carousel']=='true'
@@ -84,7 +85,7 @@ $(document).ready(function(){
 			).
 			(empty($o['width']) ? ''
 				: '$(".jcarousel-container-'. $orient. ',.jcarousel-clip-'. $orient. '").css({"width":"'. $o['width']. 'px"});'
-			).'				
+			).';
 });
 function mycarousel_initCallback(carousel) {
 	$("'. (empty($o['image'])?'galleria_container':$o['image']). '").bind("img_change",function() {
