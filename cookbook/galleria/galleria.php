@@ -40,6 +40,7 @@ function galleria ($args) {
 	
 	return '
 <script type="text/javascript">
+//<![CDATA[
 $(document).ready(function(){
 	$("'. $o['list']. '").galleria({
 		history   : '. $o['history']. ', 										// activates the history object for bookmarking, back-button etc.
@@ -95,5 +96,6 @@ function mycarousel_initCallback(carousel) {
 		: '
 });'
 	).'
+//]]>
 </script>';
 }
