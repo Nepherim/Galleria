@@ -1,4 +1,4 @@
-(:include DaveG.Style:)
+(:include DaveG.Styles:)
 (:title Galleria:)
 >>recipeinfo bluebox<<
 Summary: Convert lists of images into a panel of clickable thumbnails, or a scrollable carousel of clickable thumbnails, without requiring a page reload.
@@ -31,7 +31,7 @@ Galleria can be used to convert simple bullet lists of images into a set of styl
 !!! Features [[#features]]%h3%
 
 !! Demo [[#demo]]%h3%
-Basic demo is over at [[http://wiki.solidgone.org/Galleria/ | solidgone.org]]. Demo will be added here when things stablize.
+Basic demo is over at [[http://wiki.solidgone.org/Galleria | solidgone.org]]. Demo will be added here when things stablize.
 
 !! Being used at...[[#seenat]]%h2%
 If you're using Galleria, feel free to add your site to this list. Let others see what Galleria can do!
@@ -62,13 +62,13 @@ To install:
                 |      |- skin.css             
                 |
                 |- ie7
-                           |- credits.txt
-                           |- loading-small.gif
-                           |- loading.gif
-                           |- loading_small.gif
-                           |- next-horizontal.gif
-                           |- prev-horizontal.gif
-                           |- skin.css             
+                       |- credits.txt
+                       |- loading-small.gif
+                       |- loading.gif
+                       |- loading_small.gif
+                       |- next-horizontal.gif
+                       |- prev-horizontal.gif
+                       |- skin.css             
 @]
 >><<
 * Add this line to your [@config.php@]:
@@ -136,6 +136,7 @@ The core of Galleria lies in it's smart preloading behaviour, snappiness and the
 ''From the website'': jCarousel is a jQuery plugin for controlling a list of items in horizontal or vertical order. The items, which can be static HTML content or loaded with (or without) AJAX, can be scrolled back and forth (with or without animation).
 >><<
 
+* The integration of Galleria and jCarousel is based on work originally by [[http://alexwilsonphoto.com/ | Alex Wilson]].
 !! Bugs and Suggestions [[#buglist]]%h2%
 
 !! Change log / Release notes [[#changelog]]%h2%
