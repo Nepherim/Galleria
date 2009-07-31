@@ -1,7 +1,7 @@
 <?php if (!defined('PmWiki')) exit();
 
-$RecipeInfo['pmGallery']['Version'] = '0.1.0';
-$RecipeInfo['pmGallery']['Date'] = '2008-07-19';
+$RecipeInfo['pmGallery']['Version'] = '0.3.1';
+$RecipeInfo['pmGallery']['Date'] = '2009-07-31';
 
 /**
 * Code executed on include
