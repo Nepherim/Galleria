@@ -27,9 +27,9 @@ SDVA($galleria,array(
 SDV($galleria_fn, 'galleria');	#Only set if you need to override the basic galleria javascript call
 Markup('galleria', 'inline', "/\\(:galleria\\s*(.*?):\\)/se", "Keep($galleria_fn(PSS('$1')))");
 
-$HTMLHeaderFmt['jquery'] = '<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>';
-$HTMLHeaderFmt['galleria'] = '<script src="'. $PubDirUrl. '/galleria/galleria-1.2.3.js"></script>'.
-	'<script type="text/javascript">Galleria.loadTheme("'. $PubDirUrl. '/galleria/themes/classic/galleria.classic.min.js");</script>';
+$HTMLHeaderFmt['jquery'] = '<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>';
+$HTMLHeaderFmt['galleria-js'] = '<script src="'. $PubDirUrl. '/galleria/galleria-1.2.3.js"></script>';
+$HTMLHeaderFmt['galleria-theme'] = '<script type="text/javascript">Galleria.loadTheme("'. $PubDirUrl. '/galleria/themes/classic/galleria.classic.min.js");</script>';
 
 function galleria ($args) {
 	$args = ParseArgs($args);
