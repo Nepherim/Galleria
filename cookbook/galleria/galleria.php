@@ -1,102 +1,71 @@
 <?php if (!defined('PmWiki')) exit();
+/*
+Ref: http://www.pmwiki.org/wiki/Cookbook/Galleria
+Usage in pmwiki:
 
-$RecipeInfo['pmGallery']['Version'] = '0.3.1';
-$RecipeInfo['pmGallery']['Date'] = '2009-07-31';
+(:div id="gallery":)
+* Attach:DAW/tangocrash.jpg"Some caption"
+* Attach:DAW/walcheturm_freeman.jpg"Some other caption"
+(:divend:)
+(:galleria list="#gallery" width="500" height="500":)
+
+*/
+
+$RecipeInfo['Galleria']['Version'] = '0.4.0';
+$RecipeInfo['Galleria']['Date'] = '2011-04-29';
 
 /**
 * Code executed on include
 */
-Markup('galleria', 'inline', "/\\(:galleria\\s*(.*?):\\)/se", "Keep(galleria(PSS('$1')))");
 
-SDV($galleria['skin'],'tango');
-$HTMLHeaderFmt['jquery'] = '<script type="text/javascript" src="'. $PubDirUrl. '/galleria/jquery.pack.js"></script>';
-$HTMLHeaderFmt['galleria'] = '
-<script type="text/javascript" src="'. $PubDirUrl. '/galleria/jquery.galleria.pack.js"></script>
-<script type="text/javascript" src="'. $PubDirUrl. '/galleria/jquery.jcarousel.pack.js"></script>
-<link rel="stylesheet" type="text/css" href="'. $PubDirUrl. '/galleria/galleria.css" />
-<link rel="stylesheet" type="text/css" href="'. $PubDirUrl. '/galleria/jquery.jcarousel.css" />
-<link rel="stylesheet" type="text/css" href="'. $PubDirUrl. '/galleria/skins/'. $galleria['skin']. '/skin.css" />
-';
+// You can pass more options to galleria, either from config.php, or from the galleria markup. see http://galleria.aino.se/docs/1.2/options/
+SDVA($galleria,array(
+	'list'	=> '',		#If you're using the pmGallery Cookbook, use ".pmGalleryWrapper"
+	'width'	=> '500',
+	'height'	=> '500'
+));
+SDV($galleria_fn, 'galleria');	#Only set if you need to override the basic galleria javascript call
+Markup('galleria', 'inline', "/\\(:galleria\\s*(.*?):\\)/se", "Keep($galleria_fn(PSS('$1')))");
+
+$HTMLHeaderFmt['jquery'] = '<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>';
+$HTMLHeaderFmt['galleria-js'] = '<script src="'. $PubDirUrl. '/galleria/galleria-1.2.3.js"></script>';
+$HTMLHeaderFmt['galleria-theme'] = '<script type="text/javascript">Galleria.loadTheme("'. $PubDirUrl. '/galleria/themes/classic/galleria.classic.min.js");</script>';
 
 function galleria ($args) {
-	$o = Array(
-		'list'		 		=> '',			// use ".pmGalleryWrapper ul" with pmGallery
-		'image' 				=> '',			// leave this blank for and galleria will auto-create above the list. Use "#pmGallery_Image" with pmGallery
-		'history' 			=> 'false',
-		'clicknext' 		=> 'true',
-		'fadein' 			=> '600',		//
-		'width' 				=> '',			// 245
-		'height' 			=> '',			// 75
-		// carousel settings
-		'carousel'			=> 'false',
-		'scroll' 			=> '3',
-		'vertical'			=> 'false',		// Changes the carousel from a left/right style to a up/down style carousel.
-		'visible'			=> '3',			// the width/height of the items will be calculated and set depending on the width/height of the clipping, so that exactly that number of items will be visible.
-		'animation'			=> 'fast'		// The speed of the scroll animation as string in jQuery terms ("slow"  or "fast") or milliseconds as integer (See jQuery Documentation). If set to 0, animation is turned off.
-	);
-	$o = array_merge($o, $GLOBALS['galleria']);
-	$o = array_merge($o,ParseArgs($args));
-	$orient = ($o['vertical']=='true'?'vertical':'horizontal');
+	$args = ParseArgs($args);
+	unset($args['#']);
 
+	$o = array_merge($GLOBALS['galleria'],$args);
+	$o_galleria = galleria_json_encode($o);
 	return '
 <script type="text/javascript">
-//<![CDATA[
 $(document).ready(function(){
-	$("'. $o['list']. '").galleria({
-		history   : '. $o['history']. ', 										// activates the history object for bookmarking, back-button etc.
-		clickNext : '. $o['clicknext']. ', 										// helper for making the image clickable
-		insert    : "'. $o['image']. '", 										// the containing selector for our main image
-		onImage   : function(image,caption,thumb) { 							// lets add some image effects for demonstration purposes
-			image.css("display","none").fadeIn('. $o['fadein']. '); 		// fade in the image
-			caption.css("display","none").fadeIn('. $o['fadein']. '); 		// fade in the image
-			var _li = thumb.parents("li");										// fetch the thumbnail container
-			_li.siblings().children("img.selected").fadeTo(100,0.6);		// fade out inactive thumbnail
-			thumb.fadeTo("fast",1).addClass("selected");						// fade in active thumbnail
-			image.attr({
-				"title":"Next image >>",											// add a title for the clickable image
-				"jcarouselindex":_li.attr("jcarouselindex")					// find the index of the clicked thumb
-			});
-			$("'. $o['image']. '").trigger("img_change");
-		},
-		onThumb : function(thumb) { 												// thumbnail effects goes here
-			var _li = thumb.parents("li");										// fetch the thumbnail container
-			var _fadeTo = _li.is(".active") ? "1" : "0.6";					// if thumbnail is active, fade all the way.
-			thumb.css({display:"none",opacity:_fadeTo}).fadeIn(500);		// fade in the thumbnail when finished loading
-			thumb.hover(
-				function() { thumb.fadeTo("fast",1); },
-				function() { _li.not(".active").children("img").fadeTo("fast",0.6); } // don"t fade out if the parent is active
-			);
-		}
-	});'.
-	($o['carousel']=='true'
-		? '
-	$("'. $o['list']. ' li:first").addClass("active");
-	$("'. $o['list']. '")
-		.addClass("jcarousel-skin-'. $o['skin']. '")
-		.jcarousel({
-			scroll: '. $o['scroll']. ',
-			initCallback: mycarousel_initCallback,
-			vertical:'. $o['vertical']. ',
-			visible:'. $o['visible']. ',
-			animation:"'. $o['animation']. '"
-		});'.
-			(empty($o['height']) ? ''
-				: '$(".jcarousel-container-'. $orient. ',.jcarousel-clip-'. $orient. '").css({"height":"'. $o['height']. 'px"});'
-			).
-			(empty($o['width']) ? ''
-				: '$(".jcarousel-container-'. $orient. ',.jcarousel-clip-'. $orient. '").css({"width":"'. $o['width']. 'px"});'
-			).';
+	$("'. $o['list']. '").galleria('. $o_galleria. ');
 });
-function mycarousel_initCallback(carousel) {
-	$("'. (empty($o['image'])?'galleria_container':$o['image']). '").bind("img_change",function() {
-		var num = $(".galleria_wrapper img").attr("jcarouselindex")-1;
-		carousel.scroll(num);
-		return false;
-	});
-};'
-		: '
-});'
-	).'
-//]]>
 </script>';
+}
+
+#json_encode only in PHP5.2+. Rather than overriding json_encode, and supporting two versions. ref http://www.mike-griffiths.co.uk/php-json_encode-alternative/
+function galleria_json_encode($a=false){
+	if (is_null($a)) return 'null';
+	if ($a === false) return 'false';
+	if ($a === true) return 'true';
+	if (is_scalar($a)){
+		if (is_float($a) || is_numeric($a))  return floatval(str_replace(",", ".", strval($a)));  #Always use "." for floats.
+		if (is_string($a)) {
+			static $jsonReplaces = array(array("\\", "/", "\n", "\t", "\r", "\b", "\f", '"'), array('\\\\', '\\/', '\\n', '\\t', '\\r', '\\b', '\\f', '\"'));
+			return '"' . str_replace($jsonReplaces[0], $jsonReplaces[1], $a) . '"';
+		}else  return $a;
+	}
+	$isList = true;
+	for ($i = 0, reset($a); $i < count($a); $i++, next($a))
+		if (key($a) !== $i){ $isList = false; break; }
+	$result = array();
+	if ($isList){
+		foreach ($a as $v)  $result[] = galleria_json_encode($v);
+		return '[ ' . join(', ', $result) . ' ]';
+	}else{
+		foreach ($a as $k => $v) $result[] = galleria_json_encode($k).': '.galleria_json_encode($v);
+		return '{ ' . join(', ', $result) . ' }';
+	}
 }

@@ -2,25 +2,36 @@
 (:title Galleria:)
 >>recipeinfo bluebox<<
 Summary: Convert lists of images into a panel of clickable thumbnails, or a scrollable carousel of clickable thumbnails, without requiring a page reload.
-Version: Beta -- 0.1.0 (20-Jul-2008)
-Prerequisites: 
+Version: 0.4.0 (29-Apr-2011)
+Prerequisites:
 Maintainer: [[~DaveG]]
 Categories: [[!Images]], [[!Gallery]]
-Discussion: [[{$Name}-Talk]]
-Download: [[(Attach:)galleria.zip]]
+Discussion: [[{$Name}-Talk | Comments and Questions]]
+Download: [[http://github.com/Nepherim/{$Name}/zipball/master | ZIP]] or [[http://github.com/Nepherim/{$Name}/tarball/master | TAR]].
+Users: {{$FullName}-Users$Rating2} ([[{$FullName}-Users|View]] / [[{$FullName}-Users?action=edit|Edit]])
 >><<
 
-!! Summary [[#intro]]%h2%
-Galleria can be used to convert simple bullet lists of images into a set of stylish thumbnails, each one clickable for the full image, without needing to refresh the page with a reload.
+>>news<<
+!! Update Summary {$:Version} [[#updates]]
+This is an upgrade incorporates the latest version of the [[ | Galleria]] javascript library. It's a significant change, with easier setup, multiple carousels per page, less options to worry about, and optional integration with Lightbox. However, we did loose some of the sample skins, and also loosing the ability to display vertical carousels.
 
-(:div style="padding:.4em; border:1px solid red; background-color: #f8f8f8; overflow: auto;":)
-'''20-Jul-08''': This cookbook is Beta. Using it will not cause any loss of data, but there may be bugs, and things may not work quite right. See the [[#buglist|bug list]] for all known problems. If you do find anything odd please let me know on the [[{$Name}-Talk|discussion page]].
-(:divend:)
+If you are upgrading, make sure you:
+* Remove all current [@$galleria[]@] options in config.php, except [@$galleria['list']@].
+* [@$galleria['list']@] should now specify the container for the list of images, not the list itself. So, prrobably a change to remove the [@UL@:
+** From: [@$galleria['list'@] = 'MY_DIV UL';
+** To: [@$galleria['list'@] = 'MY_DIV';
+* Removes the use of Skins. Provides Themes, only one sample provide "Classic".
+* You may need to either add global [[#options | width and height options]] in config.php, or accept a default of 500px.
+>><<
+
+
+!! Summary [[#intro]]%h2%
+Galleria can be used to convert bullet lists of images into a set of stylish thumbnails in a carousel, each thumbnail clickable for the full image, without needing to refresh the page with a reload.
 
 !!! Table of contents %h3%
 (:div style="font-size:.85em; padding:0;":)
 * [[#description|Description]] | [[#features|Features]] | [[#demo|Demo]] | [[#seenat|Being used at...]]
-* [[#installation|Installation]] | [[#options|Options]] | [[#parameters|Parameters]] | [[#examples|Examples]] | [[#style|Styling]]
+* [[#installation|Installation]] | [[#usage|Usage]] |  [[#options|Options]] | [[#themes|Themes]] | [[#examples|Examples]] | [[#style|Styling]]
 * [[#notes|Notes]] | [[#buglist|Bug List]] | [[#changelog|Change Log]]
 * [[#comments|Comments]]
 (:divend:)
@@ -28,47 +39,32 @@ Galleria can be used to convert simple bullet lists of images into a set of styl
 !! Description [[#description]]%h2%
 (:Description Convert lists of images into a panel of clickable thumbnails, or a scrollable carousel of clickable thumbnails, without requiring a page reload.:){$Description}
 
-!!! Features [[#features]]%h3%
 
 !! Demo [[#demo]]%h3%
-Basic demo is over at [[http://wiki.solidgone.org/Galleria | solidgone.org]]. Demo will be added here when things stablize.
+Basic demo is over at [[http://wiki.solidgone.org/Galleria | solidgone.org]].
 
-!! Being used at...[[#seenat]]%h2%
-If you're using Galleria, feel free to add your site to this list. Let others see what Galleria can do!
+!! Comments [[#comments]] %h2%
+Show your support and [[{$Name}-Users | leave a comment, or check out other user websites]], or help out and let me know if you have a [[{$Name}-Talk | suggestion or a problem]]. Love it or hate it, I'd like to know!
+
 
 !! Installation [[#installation]]%h2%
 To install:
-* Extract all files in the [@pub@] and the [@cookbook@] directory  from [[(Attach:)galleria.zip]] into your [@pub@] and [@cookbook@] directories respectively. You should end up with a [@galleria@] directory in both [@cookbook@] and [@pub@].
+* Download either the [[http://github.com/Nepherim/{$Name}/zipball/master | ZIP]] or [[http://github.com/Nepherim/{$Name}/tarball/master | TAR]], and extract all files in the [@pub@] and the [@cookbook@] directory  into your [@pub@] and [@cookbook@] directories respectively. You should end up with a [@galleria@] directory in both [@cookbook@] and [@pub@].
   After extracting the files you should have:
 >>box<<
 [@
  cookbook/galleria/
       |- galleria.php
+      |- galleria.txt
       |
  pub/galleria/
-      |- galleria.css
-      |- jquery.jcarousel.css
-      |- jquery.galleria.pack.js
-      |- jquery.jcarousel.pack.js
-      |- jquery.pack.js
+      |- galleria-1.2.3.js
+      |- galleria-1.2.3.min.js
+      |- LICENSE
       |
-      |- /skins/
-                |- tango
-                |      |- credits.txt
-                |      |- next-horizontal.png
-                |      |- next-vertical.png
-                |      |- prev-horizontal.png
-                |      |- prev-vertical.png
-                |      |- skin.css             
-                |
-                |- ie7
-                       |- credits.txt
-                       |- loading-small.gif
-                       |- loading.gif
-                       |- loading_small.gif
-                       |- next-horizontal.gif
-                       |- prev-horizontal.gif
-                       |- skin.css             
+      |- /themes/
+                |- classic
+                |      |- SEVERAL THEME FILES
 @]
 >><<
 * Add this line to your [@config.php@]:
@@ -76,73 +72,93 @@ To install:
 [@include_once("$FarmD/cookbook/galleria/galleria.php");@]
 >><<
 
+!! Usage
+Simply create a list of images, and then point galleria to that list using an xpath reference to the list container, or the list itself. Many more examples on [[http://wiki.solidgone.org/Galleria | solidgone.org]].
+
+[@
+(:div id="demo1":)
+* Attach:P5123230.jpg
+* Attach:P5123234.jpg
+* Attach:P5123241.jpg
+(:divend:)
+(:galleria list="#demo1")
+@]
+
+
 !! Options [[#options]]%h2%
-!!! Changing Skins [[#skins]]%h3%
-Galleria comes with two skins, [@tango@] and [@ie7@]. [@tango@] is the default skin. Use another skin by adding this line into [@config.php@] before the [@include@] statement:
+The main option you need to set is [@list@] which is the xpath to the image list. In addition you can use any of the [[http://galleria.aino.se/docs/1.2/options/ | options available to Galleria]]:
+* '''list''': The full xpath to the image list container. Use ".pmGalleryWrapper" with pmGallery.
+* '''width/height''': The maximum width/height to display the main image.
+
+All options can either set in your config.php, where you know they will apply site wide, or at each [@ (:galleria:)@] directive.
+* In order to set opttions in [@config.php@] use this format:
 >>box<<
-[@$galleria['skin']='ie7';@]
+  [@ $galleria['option_name'] = 'value';@]
+>><<
+* In order to set options with the markup directive use this format -- note that quotes are optional, but '''must''' be used if the value contains spaces.
+>>box<<
+  [@ (:galleria option_name="value" :) @]
 >><<
 
-Create new skins by using one of these as a base, and changing the css found in [@pub/galleria/skins/tango@] or [@pub/galleria/skins/ie7@].
 
-!! Parameters [[#parameters]]%h2%
-All parameters below can either set parameters in your config.php, where you know they will apply site wide, or at each [@ (:galleria:)@] directive.
-
-* In order to set parameters in [@config.php@] use this format:
+!! Changing Themes [[#themes]]%h3%
+Galleria comes with a single sample theme, [@classic@]. If you load or create additional themes, update the $HTMLHeader with the apprropriate path:
 >>box<<
-  [@ $galleria['parameter_name'] = 'value';@]
->><<
-* In order to set parameters with the markup directive use this format -- note that quotes are optional, but '''must''' be used if the value contains spaces.
->>box<<
-  [@ (:galleria parameter_name="value" :) @]
+[@$HTMLHeaderFmt['galleria-theme'] = '<script type="text/javascript">Galleria.loadTheme("'. $PubDirUrl. '/galleria/themes/classic/galleria.classic.min.js");</script>';@]
 >><<
 
-!!! Galleria Settings [[#galleriasettings]]%h3%
-These parameters are typically used within the markup directive:
-* '''list''': The full xpath to the image list UL element. Use ".pmGalleryWrapper ul" with pmGallery.
-* '''image''': The full xpath to the element in which you want the main image loaded. Leave this blank galleria will auto-create a div above the list, with the class "galleria_container". Use "#pmGallery_Image" if you've used auto-created groups with pmGallery.
-* '''history''': Default is false. If enabled then allows the use of the back button to return to previously viewed images.
-* '''clicknext''': Default is true. Clicking on the main image will load the next image in the list.
-* '''fadein''': Default is 600. The number of milli-seconds over which to fade-in the main image. Higher numbers result in a slower fade.
-
-!!! Carousel Settings [[#carouselsettings]]%h3%
-These parameters are typically used within the markup directive:
-* '''carousel''': Default is false. Determines whether to create a carousel like scroller container for the thumbnails. 
-
-The following parameters only apply if "carousel" is set to true.
-* '''scroll''': Default is 3. The number of images to scroll when the 'previous' and 'next' buttons are clicked. Usually set to the same number as 'visible', or one less than 'visible'.
-* '''visible''':	Default is 3. The width/height of each thumbnail will be calculated and set depending on the width/height of the clipping, so that exactly that number of thumbnails will be visible.
-* '''vertical''':	Default is false. Changes the carousel from a left/right style to a up/down style carousel.
-* '''animation''': Default is fast. The speed of the thumbnail scroll animation as string in jQuery terms ("slow" or "fast") or milliseconds as an integer. If set to 0, animation is turned off.
-* '''width''': Default is 245. The width of the css thumbnail container. This overrides values provided in the skin.
-* '''height''': Default is 75. The height of the css thumbnail container. This overrides values provided in the skin.
 
 !! Examples [[#examples]]%h2%
 See [[http://wiki.solidgone.org/Galleria/Demo1 | demos on solidgone.org]].
 
+
 !! Styling [[#style]]%h2%
 Coming later... (outer and inner classes)
 
+
 !! Notes [[#notes]]%h2%
 Galleria is based on:
-* The [[http://jquery.com | jQuery]] library [[http://devkick.com/lab/galleria/ | Galleria]]:
+* The [[http://jquery.com | jQuery]] library [[http://galleria.aino.se/ | Galleria]]:
 >>box<<
-''From the website'': Galleria is a javascript image gallery written in jQuery. It loads the images one by one from an unordered list and displays thumbnails when each image is loaded. It will create thumbnails for you if you choose so, scaled or unscaled, centered and cropped inside a fixed thumbnail box defined by CSS.
-The core of Galleria lies in it's smart preloading behaviour, snappiness and the fresh absence of obtrusive design elements.
+''From the website'': Galleria is a JavaScript image gallery framework built on top of the jQuery library. The aim is to simplify the process of creating professional image galleries for the web and mobile devices.
 >><<
 
-* The jQuery library [[http://sorgalla.com/projects/jcarousel/ | jCarousel]]:
->>box<<
-''From the website'': jCarousel is a jQuery plugin for controlling a list of items in horizontal or vertical order. The items, which can be static HTML content or loaded with (or without) AJAX, can be scrolled back and forth (with or without animation).
->><<
 
-* The integration of Galleria and jCarousel is based on work originally by [[http://alexwilsonphoto.com/ | Alex Wilson]].
 !! Bugs and Suggestions [[#buglist]]%h2%
+None known.
+
 
 !! Change log / Release notes [[#changelog]]%h2%
+
+!!! v0.4.0 (29-Apr-2011) %h3%
+''Contributors: Mauro Bieg, [[~DaveG]]''
+
+* chg: Updated documentation.
+* chg: Removed use of Carousel script.
+* chg: change $gallery['list'] from ".pmGalleryWrapper ul" to ".pmGalleryWrapper"
+* chg: Upgraded to Galleria 1.2.3.
+** new: Add option to open allow integration with image 'viewers' like [[Cookbook/ThickBox]], LightBox, etc.
+** new: Allow multiple galleries on a page.
+** Removes the use of Skins. Provides Themes, only one sample provide "Classic".
+** All prior options removed, and [[http://galleria.aino.se/docs/1.2/options/ | ]new options are now added]].
+** Loose vertical carousels.
+* new: Added defaults for height and width.
+* new: Provide mechanism to capture Galleria javascript options from PHP settings.
+* bug: IE7 displays the UL list of images briefly before correctly showing the image thumbs.
+
+
+!!! v0.3.1 (31-Jul-2009) %h3%
+''Contributors: [[~IDB]]'' :)
+* chg: Corrected version number!
+
+!!! v0.3.0 (8-Dec-08) %h3%
+''Contributors: [[~DaveG]]''
+* new: Added fade in/out for caption.
+
+!!! v0.2.0 (8-Dec-08) %h3%
+''Contributors: [[~DaveG]]''
+* new: Added dark theme for the [[PhotoGallery]] skin.
+
 !!! v0.1.0 (20-Jul-08) %h3%
 ''Contributors: [[~DaveG]]''
 * Initial beta release.
-
-!! Comments [[#comments]]%h2%
-See Discussion at [[{$Name}-Talk]].
