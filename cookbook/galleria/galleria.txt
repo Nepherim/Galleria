@@ -13,15 +13,15 @@ Users: {{$FullName}-Users$Rating2} ([[{$FullName}-Users|View]] / [[{$FullName}-U
 
 >>news<<
 !! Update Summary {$:Version} [[#updates]]
-This is an upgrade incorporates the latest version of the [[ | Galleria]] javascript library. It's a significant change, with easier setup, multiple carousels per page, less options to worry about, and optional integration with Lightbox. However, we did loose some of the sample skins, and also loosing the ability to display vertical carousels.
+This upgrade incorporates the latest version of the [[http://galleria.aino.se/ | Galleria]] javascript library. It's a significant change, with easier setup, multiple carousels per page, less options to worry about, and optional integration with Lightbox. With simplification we did loose some of the sample skins, and also lost the ability to display vertical carousels.
 
 If you are upgrading, make sure you:
-* Remove all current [@$galleria[]@] options in config.php, except [@$galleria['list']@].
+* Remove all current [@$galleria[]@] [[#options | options]], except [@list@], [@height@], and [@width@].
 * [@$galleria['list']@] should now specify the container for the list of images, not the list itself. So, prrobably a change to remove the [@UL@:
 ** From: [@$galleria['list'@] = 'MY_DIV UL';
 ** To: [@$galleria['list'@] = 'MY_DIV';
-* Removes the use of Skins. Provides Themes, only one sample provide "Classic".
-* You may need to either add global [[#options | width and height options]] in config.php, or accept a default of 500px.
+* Replaces the use of Skins, with a theme concept -- only one sample is provided.
+* You may need to either add global [[#options | width and height options]], or accept a default of 500px.
 >><<
 
 
@@ -102,7 +102,7 @@ All options can either set in your config.php, where you know they will apply si
 
 
 !! Changing Themes [[#themes]]%h3%
-Galleria comes with a single sample theme, [@classic@]. If you load or create additional themes, update the $HTMLHeader with the apprropriate path:
+Galleria comes with a single sample theme, [@classic@]. If you load or [[http://galleria.aino.se/docs/1.2/themes/creating_a_theme/ | create additional themes]], update the $HTMLHeader with the apprropriate path:
 >>box<<
 [@$HTMLHeaderFmt['galleria-theme'] = '<script type="text/javascript">Galleria.loadTheme("'. $PubDirUrl. '/galleria/themes/classic/galleria.classic.min.js");</script>';@]
 >><<
@@ -129,6 +129,10 @@ None known.
 
 
 !! Change log / Release notes [[#changelog]]%h2%
+
+!!! v0.4.1 (5-May-2011) %h3%
+''Contributors: [[~DaveG]]''
+* chg: Ensure $HTMLHeaderFmt values can be overridden by using SDVA (ie, allow jquery to be stored locally).
 
 !!! v0.4.0 (29-Apr-2011) %h3%
 ''Contributors: Mauro Bieg, [[~DaveG]]''
