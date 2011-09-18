@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <title>Galleria Classic Theme</title>
+        <title>Galleria History Plugin</title>
         <style>
 
             /* Demo styles */
@@ -23,13 +23,16 @@
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.js"></script>
 
         <!-- load Galleria -->
-        <script src="../../galleria-1.2.5.min.js"></script>
+        <script src="../../galleria.js"></script>
+
+        <!-- load the History plugin, no need for further scripting -->
+        <script src="../../plugins/history/galleria.history.js"></script>
 
     </head>
 <body>
     <div class="content">
-        <h1>Galleria Classic Theme</h1>
-        <p>Demonstrating a basic gallery example.</p>
+        <h1>Galleria History Plugin</h1>
+        <p>Demonstrating a basic history example. Supports most browsers, including FF 3.0+ and IE 7+</p>
 
         <!-- Adding gallery images. We use resized thumbnails here for better performance, but it’s not necessary -->
 
@@ -87,7 +90,7 @@
     <script>
 
     // Load the classic theme
-	Galleria.loadTheme('galleria.classic.min.js');
+	Galleria.loadTheme('../../themes/classic/galleria.classic.js');
 
 	// Initialize Galleria
 	$('#galleria').galleria();

@@ -22,8 +22,8 @@ Don't use this in conjunction with the (:galleria :) markup, use one or the othe
 >><<
 */
 
-$RecipeInfo['Galleria']['Version'] = '0.5.1';
-$RecipeInfo['Galleria']['Date'] = '2011-06-22';
+$RecipeInfo['Galleria']['Version'] = '0.5.2';
+$RecipeInfo['Galleria']['Date'] = '2011-09-18';
 
 // You can pass more options to galleria, either from config.php, or from the galleria markup. see http://galleria.aino.se/docs/1.2/options/
 SDVA($galleria,array(
@@ -40,7 +40,7 @@ Markup('galleria', 'inline', "/\\(:galleria\\s*(.*?):\\)/se", "Keep($galleria_fn
 
 SDVA($HTMLHeaderFmt, array(
 	'jquery' => '<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>',
-	'galleria-js' => '<script src="'. $PubDirUrl. '/galleria/galleria-1.2.4.js"></script>',
+	'galleria-js' => '<script src="'. $PubDirUrl. '/galleria/galleria-1.2.5.min.js"></script>',
 	'galleria-theme' => '<script type="text/javascript">Galleria.loadTheme("'. $PubDirUrl. '/galleria/themes/classic/galleria.classic.min.js");</script>'
 ));
 
@@ -58,7 +58,7 @@ global $galleria, $galleria_unsafe_options, $galleria_safe_mode;
 	return '
 <script type="text/javascript">
 $(document).ready(function(){
-	$("'. $o['list']. '").galleria(' . bi_json_encode($o, false, $galleria_unsafe_options).');
+	$("'. $o['list']. '").galleria(' . galleria_json_encode($o, false, $galleria_unsafe_options).');
 });
 </script>';
 }
@@ -67,7 +67,7 @@ $(document).ready(function(){
 #json_encode only in PHP5.2+. Rather than overriding json_encode, and supporting two versions. ref http://www.mike-griffiths.co.uk/php-json_encode-alternative/
 #$strict will wrap the key in quotes.
 #keys in $np array if found in $a will not have VALUES wrapped in quotes. Allows javascript functions to be option values.
-function bi_json_encode($a=false, $strict=true, $np=false){
+function galleria_json_encode($a=false, $strict=true, $np=false){
 	if (is_null($a)) return 'null';
 	if ($a === false) return 'false';
 	if ($a === true) return 'true';
@@ -83,10 +83,10 @@ function bi_json_encode($a=false, $strict=true, $np=false){
 		if (key($a) !== $i){ $isList = false; break; }
 	$result = array();
 	if ($isList){
-		foreach ($a as $v)  $result[] = bi_json_encode($v, $strict, $np);
+		foreach ($a as $v)  $result[] = galleria_json_encode($v, $strict, $np);
 		return '[ ' . join(', ', $result) . ' ]';
 	}else{
-		foreach ($a as $k => $v) $result[] = ($strict ?bi_json_encode($k, $strict, $np) :$k) .': ' .(in_array($k, $np) ?$v :bi_json_encode($v, $strict, $np));
+		foreach ($a as $k => $v) $result[] = ($strict ?galleria_json_encode($k, $strict, $np) :$k) .': ' .(in_array($k, $np) ?$v :galleria_json_encode($v, $strict, $np));
 		return '{ ' . join(', ', $result) . ' }';
 	}
 }
