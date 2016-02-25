@@ -22,8 +22,8 @@ Don't use this in conjunction with the (:galleria :) markup, use one or the othe
 >><<
 */
 
-$RecipeInfo['Galleria']['Version'] = '0.5.2';
-$RecipeInfo['Galleria']['Date'] = '2011-09-18';
+$RecipeInfo['Galleria']['Version'] = '0.6.0';
+$RecipeInfo['Galleria']['Date'] = '2016-02-25';
 
 // You can pass more options to galleria, either from config.php, or from the galleria markup. see http://galleria.aino.se/docs/1.2/options/
 SDVA($galleria,array(
@@ -36,11 +36,11 @@ SDV($galleria_safe_mode, true);
 SDVA($galleria_unsafe_options, array('dataConfig', 'extend'));  #galleria.js expects these options to be functions, and thus NOT quoted when passed into galleria(). Potentially unsafe.
 
 SDV($galleria_fn, 'galleria');  #Advanced use only. Set if you need to override the basic galleria javascript call.
-Markup('galleria', 'inline', "/\\(:galleria\\s*(.*?):\\)/se", "Keep($galleria_fn(PSS('$1')))");
+Markup_e('galleria', 'inline', "/\\(:galleria\\s*(.*?):\\)/s", "Keep($galleria_fn(\$m[1]))");
 
 SDVA($HTMLHeaderFmt, array(
-	'jquery' => '<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>',
-	'galleria-js' => '<script src="'. $PubDirUrl. '/galleria/galleria-1.2.5.min.js"></script>',
+	'jquery' => '<script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.js"></script>',
+	'galleria-js' => '<script src="'. $PubDirUrl. '/galleria/galleria-1.4.2.min.js"></script>',
 	'galleria-theme' => '<script type="text/javascript">Galleria.loadTheme("'. $PubDirUrl. '/galleria/themes/classic/galleria.classic.min.js");</script>'
 ));
 
@@ -58,11 +58,10 @@ global $galleria, $galleria_unsafe_options, $galleria_safe_mode;
 	return '
 <script type="text/javascript">
 $(document).ready(function(){
-	$("'. $o['list']. '").galleria(' . galleria_json_encode($o, false, $galleria_unsafe_options).');
+	$("'. $o['list']. '").galleria(' .galleria_json_encode($o, false, $galleria_unsafe_options). ');
 });
 </script>';
 }
-
 
 #json_encode only in PHP5.2+. Rather than overriding json_encode, and supporting two versions. ref http://www.mike-griffiths.co.uk/php-json_encode-alternative/
 #$strict will wrap the key in quotes.

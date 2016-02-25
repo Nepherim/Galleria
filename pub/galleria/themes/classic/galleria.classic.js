@@ -1,16 +1,15 @@
 /**
- * @preserve Galleria Classic Theme 2011-08-01
- * http://galleria.aino.se
+ * Galleria Classic Theme 2012-08-08
+ * http://galleria.io
  *
- * Copyright (c) 2011, Aino
- * Licensed under the MIT license.
+ * Licensed under the MIT license
+ * https://raw.github.com/aino/galleria/master/LICENSE
+ *
  */
 
-/*global jQuery, Galleria */
-
-Galleria.requires(1.25, 'This version of Classic theme requires Galleria 1.2.5 or later');
-
 (function($) {
+
+/*global window, jQuery, Galleria */
 
 Galleria.addTheme({
     name: 'classic',
@@ -25,6 +24,8 @@ Galleria.addTheme({
     },
     init: function(options) {
 
+        Galleria.requires(1.4, 'This version of Classic theme requires Galleria 1.4 or later');
+
         // add some elements
         this.addElement('info-link','info-close');
         this.append({
@@ -33,8 +34,7 @@ Galleria.addTheme({
 
         // cache some stuff
         var info = this.$('info-link,info-close,info-text'),
-            touch = Galleria.TOUCH,
-            click = touch ? 'touchstart' : 'click';
+            touch = Galleria.TOUCH;
 
         // show loader & counter with opacity
         this.$('loader,counter').show().css('opacity', 0.4);
@@ -48,7 +48,7 @@ Galleria.addTheme({
 
         // toggle info
         if ( options._toggleInfo === true ) {
-            info.bind( click, function() {
+            info.bind( 'click:fast', function() {
                 info.toggle();
             });
         } else {
@@ -71,18 +71,24 @@ Galleria.addTheme({
                     $(e.thumbTarget).css('opacity',1);
                 }
             } else {
-                $(e.thumbTarget).css('opacity', this.getIndex() ? 1 : 0.6);
+                $(e.thumbTarget).css('opacity', this.getIndex() ? 1 : 0.6).bind('click:fast', function() {
+                    $(this).css( 'opacity', 1 ).parent().siblings().children().css('opacity', 0.6);
+                });
             }
         });
+
+        var activate = function(e) {
+            $(e.thumbTarget).css('opacity',1).parent().siblings().children().css('opacity', 0.6);
+        };
 
         this.bind('loadstart', function(e) {
             if (!e.cached) {
                 this.$('loader').show().fadeTo(200, 0.4);
             }
-
+            window.setTimeout(function() {
+                activate(e);
+            }, touch ? 300 : 0);
             this.$('info').toggle( this.hasInfo() );
-
-            $(e.thumbTarget).css('opacity',1).parent().siblings().children().css('opacity', 0.6);
         });
 
         this.bind('loadfinish', function(e) {
